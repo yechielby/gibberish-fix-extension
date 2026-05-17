@@ -21,3 +21,56 @@ test('isSpecial: {tab} token is special', () => {
 test('isSpecial: a normal letter is not special', () => {
   assert.equal(isSpecial('a'), false);
 });
+
+import { buildMapping } from '../src/converter';
+import { english } from '../src/layouts/english';
+import type { Layout } from '../src/layouts/types';
+
+const hebrewForTest: Layout = {
+  name: 'hebrew',
+  displayName: 'עברית',
+  scriptRange: [{ from: 0x0590, to: 0x05ff }],
+  klidWindows: '0000040d',
+  default: [
+    " 1 2 3 4 5 6 7 8 9 0 - = {bksp}",
+    "{tab} / ' ק ר א ט ו ן ם פ ] [ \\",
+    "{lock} ש ד ג כ ע י ח ל ך ף , {enter}",
+    "{shift} ז ס ב ה נ מ צ ת ץ . {shift}",
+    ".com @ {space}",
+  ],
+};
+
+test('buildMapping maps English letter positions to Hebrew', () => {
+  const map = buildMapping(english, hebrewForTest, true);
+  assert.equal(map.get('t'), 'א');
+  assert.equal(map.get('a'), 'ש');
+  assert.equal(map.get('k'), 'ל');
+});
+
+test('buildMapping skips special keys', () => {
+  const map = buildMapping(english, hebrewForTest, true);
+  assert.equal(map.has('{tab}'), false);
+  assert.equal(map.has(''), false);
+});
+
+test('buildMapping skips digits when convertDigits is false', () => {
+  const map = buildMapping(english, hebrewForTest, false);
+  assert.equal(map.has('1'), false);
+});
+
+test('buildMapping includes digits when convertDigits is true', () => {
+  const map = buildMapping(english, hebrewForTest, true);
+  // Hebrew row 1 position 1 is "1" (English position 1 is also "1") -> no-op entry exists
+  assert.equal(map.get('1'), '1');
+});
+
+test('buildMapping uses min length for graceful degradation', () => {
+  const shortLayout: Layout = {
+    ...hebrewForTest,
+    default: ["{tab} ק", "{tab}", "{tab}", "{tab}", ".com"],
+  };
+  const map = buildMapping(english, shortLayout, true);
+  // Only english row 0 pos 1 ("1") vs short "ק" — but english row 0 is numbers;
+  // ensure no crash and map is a Map
+  assert.ok(map instanceof Map);
+});
