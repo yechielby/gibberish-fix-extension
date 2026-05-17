@@ -34,6 +34,33 @@ export function buildMapping(
   return map;
 }
 
+const inTargetScript = (key: string, target: Layout): boolean => {
+  const cp = key.codePointAt(0);
+  return (
+    cp !== undefined &&
+    target.scriptRange.some((rg) => cp >= rg.from && cp <= rg.to)
+  );
+};
+
+/**
+ * Build a single map for auto mode: every character is converted by its own
+ * script. Latin / ASCII keys use english -> target; characters in the target
+ * script use target -> english. Target-script entries are layered on top of
+ * the english->target map but only for keys that are actually in the target
+ * script range, so shared ASCII slots (e.g. `,`) stay english->target.
+ */
+export function buildBidiMapping(
+  english: Layout,
+  target: Layout,
+  convertDigits: boolean,
+): Map<string, string> {
+  const map = buildMapping(english, target, convertDigits);
+  for (const [k, v] of buildMapping(target, english, convertDigits)) {
+    if (inTargetScript(k, target)) map.set(k, v);
+  }
+  return map;
+}
+
 /**
  * Convert text using a key map. Multi-character keys (e.g. Arabic لا
  * ligature) are substituted first, then remaining single chars.

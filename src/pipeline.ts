@@ -1,6 +1,11 @@
 import * as vscode from 'vscode';
 import { getLayout } from './layouts/index';
-import { buildMapping, convert, detectDirection } from './converter';
+import {
+  buildMapping,
+  buildBidiMapping,
+  convert,
+  detectDirection,
+} from './converter';
 import { getSettings, setPreferredTarget } from './settings';
 import { switchOSKeyboard } from './osLayout';
 import type { Layout } from './layouts/types';
@@ -31,32 +36,61 @@ export async function runPipeline(
   // 1. snapshot
   const snapshot = await vscode.env.clipboard.readText();
 
-  // 2-3. cut
-  await vscode.commands.executeCommand('editor.action.clipboardCutAction');
-  await sleep(80);
-  let cut = await vscode.env.clipboard.readText();
+  // 2. In a real text editor, a no-selection cut grabs the whole line
+  // *including its trailing newline* and deletes the line — pasting that
+  // back leaves a spurious blank line. So detect the empty-selection case
+  // up front (only possible when a text editor is active; webview/chat
+  // inputs have no activeTextEditor and fall through to the heuristic).
+  const editor = vscode.window.activeTextEditor;
+  const noSelection =
+    editor !== undefined && editor.selections.every((s) => s.isEmpty);
 
-  // 4. no selection -> select all, cut again
-  if (cut === snapshot && settings.selectAllIfNoSelection) {
+  if (noSelection && !settings.selectAllIfNoSelection) return;
+
+  let cut: string;
+  if (noSelection) {
+    // Select all first, then a single cut — never the line-with-newline cut.
     await vscode.commands.executeCommand('editor.action.selectAll');
     await sleep(50);
     await vscode.commands.executeCommand('editor.action.clipboardCutAction');
     await sleep(80);
     cut = await vscode.env.clipboard.readText();
+  } else {
+    // 3. cut the selection
+    await vscode.commands.executeCommand('editor.action.clipboardCutAction');
+    await sleep(80);
+    cut = await vscode.env.clipboard.readText();
+
+    // 4. webview/chat with no selection -> select all, cut again
+    if (cut === snapshot && settings.selectAllIfNoSelection) {
+      await vscode.commands.executeCommand('editor.action.selectAll');
+      await sleep(50);
+      await vscode.commands.executeCommand('editor.action.clipboardCutAction');
+      await sleep(80);
+      cut = await vscode.env.clipboard.readText();
+    }
   }
 
   // 5. still nothing -> abort silently
   if (!cut || cut === snapshot) return;
 
-  // 6. direction
-  const dir =
-    forced === 'auto' ? detectDirection(cut, target) : forced;
-
-  // 7. convert
-  const [from, to] =
-    dir === 'toEnglish' ? [target, english] : [english, target];
-  const map = buildMapping(from, to, settings.convertDigits);
-  const converted = convert(cut, map);
+  // 6-7. convert. Auto = per-character bidirectional (each char by its own
+  // script). Forced = single direction (convert only the opposite script).
+  let converted: string;
+  let dir: 'toEnglish' | 'toTarget';
+  if (forced === 'auto') {
+    const map = buildBidiMapping(english, target, settings.convertDigits);
+    converted = convert(cut, map);
+    // The mix has no single direction; use the majority only to decide
+    // which OS keyboard to switch to afterwards.
+    dir = detectDirection(cut, target);
+  } else {
+    dir = forced;
+    const [from, to] =
+      dir === 'toEnglish' ? [target, english] : [english, target];
+    const map = buildMapping(from, to, settings.convertDigits);
+    converted = convert(cut, map);
+  }
 
   // 8-9. write + paste
   await vscode.env.clipboard.writeText(converted);

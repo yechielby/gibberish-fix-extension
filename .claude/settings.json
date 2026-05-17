@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(superpowers:test-driven-development)",
+      "Skill(superpowers:test-driven-development:*)",
+      "Bash(npm run *)"
+    ]
+  }
+}

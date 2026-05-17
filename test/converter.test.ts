@@ -127,6 +127,35 @@ test('generated Hebrew layout: ארוק -> true (reverse)', () => {
   assert.equal(convert('ארוק', map), 'true');
 });
 
+import { buildBidiMapping } from '../src/converter';
+
+test('buildBidiMapping: mixed gibberish converts each char by its own script', () => {
+  const he = getLayout('hebrew')!;
+  const map = buildBidiMapping(english, he, true);
+  assert.equal(
+    convert('vna,bv mrhl kvhu, auuv  ארוק', map),
+    'המשתנה צריך להיות שווה  true',
+  );
+});
+
+test('buildBidiMapping: double spaces are preserved', () => {
+  const he = getLayout('hebrew')!;
+  const map = buildBidiMapping(english, he, true);
+  assert.equal(convert('a  ב', map), 'ש  c');
+});
+
+test('buildBidiMapping: pure Latin gibberish still goes to target', () => {
+  const he = getLayout('hebrew')!;
+  const map = buildBidiMapping(english, he, true);
+  assert.equal(convert('tbh rumv kgau,', map), 'אני רוצה לעשות');
+});
+
+test('buildBidiMapping: pure target gibberish still goes to English', () => {
+  const he = getLayout('hebrew')!;
+  const map = buildBidiMapping(english, he, true);
+  assert.equal(convert('ארוק', map), 'true');
+});
+
 test('generated index exposes ~32 target names', () => {
   const { TARGET_NAMES } = require('../src/layouts/index');
   assert.ok(TARGET_NAMES.length >= 30 && TARGET_NAMES.length <= 32);
