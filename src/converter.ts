@@ -33,3 +33,15 @@ export function buildMapping(
   }
   return map;
 }
+
+/**
+ * Convert text using a key map. Multi-character keys (e.g. Arabic لا
+ * ligature) are substituted first, then remaining single chars.
+ */
+export function convert(text: string, map: Map<string, string>): string {
+  const ligatures = [...map.entries()].filter(([k]) => k.length > 1);
+  for (const [from, to] of ligatures) {
+    text = text.split(from).join(to);
+  }
+  return [...text].map((ch) => map.get(ch) ?? ch).join('');
+}

@@ -74,3 +74,26 @@ test('buildMapping uses min length for graceful degradation', () => {
   // ensure no crash and map is a Map
   assert.ok(map instanceof Map);
 });
+
+import { convert } from '../src/converter';
+
+test('convert: Hebrew gibberish to intended English-position text', () => {
+  const map = buildMapping(hebrewForTest, english, true);
+  assert.equal(convert('ארוק', map), 'true');
+});
+
+test('convert: English-position gibberish to Hebrew', () => {
+  const map = buildMapping(english, hebrewForTest, true);
+  assert.equal(convert('tbh rumv kgau,', map), 'אני רוצה לעשות');
+});
+
+test('convert: unmapped characters pass through unchanged', () => {
+  const map = buildMapping(english, hebrewForTest, true);
+  assert.equal(convert('\n', map), '\n');
+});
+
+test('convert: multi-char ligature keys are replaced before single chars', () => {
+  const map = new Map<string, string>([['لا', 'v'], ['ا', 'h']]);
+  // "لا" must become "v", not "h"+"h"
+  assert.equal(convert('لا', map), 'v');
+});
