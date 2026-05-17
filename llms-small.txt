@@ -1,0 +1,27 @@
+# GibberishFix
+
+> Standalone VS Code extension that fixes text typed in the wrong keyboard layout (LangOver-style) in any input — including AI-chat webviews (Claude Code, Copilot, Cursor, Antigravity, Gemini), the editor, and the terminal. One keystroke converts the text and (Windows) switches the OS keyboard to match.
+
+Mechanism: a clipboard-relay pipeline (the only thing that penetrates
+extension webviews) — cut → detect direction (majority script vote) → remap
+characters position-by-position between keyboard layouts → paste → switch OS
+keyboard. Pure conversion core is unit-tested; ~32 non-Latin layouts are
+auto-generated at build time and committed (zero runtime deps).
+
+Usage: select gibberish, press `Alt+Shift+L` (auto); `Alt+Shift+E`/`Alt+Shift+T`
+force direction; no selection converts the whole input. Settings:
+`gibberish-fix.targetLanguage` (default `auto`, OS-detected), `switchOSKeyboard`,
+`convertDigits`, `selectAllIfNoSelection`. Verified: `tbh rumv kgau,` →
+`אני רוצה לעשות`; `ארוק` → `true`.
+
+Layout data sourced from simple-keyboard-layouts (Francisco Hodge, MIT).
+Publisher `yechielby`. Windows-only OS keyboard switch in v1.0.
+
+## Key files
+
+- [src/converter.ts](src/converter.ts): pure remapping logic (splitRow/buildMapping/convert/detectDirection).
+- [src/pipeline.ts](src/pipeline.ts): the 11-step cut→convert→paste→kb-switch flow.
+- [src/extension.ts](src/extension.ts): activation + commands + target resolution.
+- [src/osLayout.ts](src/osLayout.ts): OS detection (Windows LANGID) + kb-switch.
+- [src/layouts/](src/layouts/): `Layout` type, hand-written `english.ts`, 32 generated layouts, `index.ts` registry.
+- [README.md](README.md) / [CLAUDE.md](CLAUDE.md): usage / architecture & conventions.

@@ -68,5 +68,5 @@
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   },
-  "files": ["dist", "scripts/switch-layout.ps1", "README.md", "CHANGELOG.md", "icon.png"]
+  "files": ["dist", "scripts/switch-layout.ps1", "README.md", "CHANGELOG.md", "LICENSE", "icon.png"]
 }

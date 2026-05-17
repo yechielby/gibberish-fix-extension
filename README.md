@@ -27,6 +27,12 @@ Bengali, Japanese, Korean, and more), auto-generated from
 Related: the [Claude Code RTL](https://marketplace.visualstudio.com/publishers/yechielby)
 extensions add RTL display support — GibberishFix is a separate, complementary tool.
 
+## Credits
+
+The language layouts in this project are sourced from
+[simple-keyboard-layouts](https://github.com/simple-keyboard/simple-keyboard-layouts)
+by Francisco Hodge, and are licensed under the MIT License.
+
 ---
 
 ## עברית
