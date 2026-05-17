@@ -48,6 +48,13 @@ export async function runPipeline(
   if (noSelection && !settings.selectAllIfNoSelection) return;
 
   let cut: string;
+  // Tracks whether we did a select-all + cut. Once we have, the clipboard
+  // necessarily holds the document text, so `cut === snapshot` is no longer
+  // a reliable "nothing happened" signal (the snapshot may already equal the
+  // text, e.g. from a previous conversion still on the clipboard). Aborting
+  // there after a destructive cut would wipe the document — so a select-all
+  // run only aborts when there was genuinely nothing to cut.
+  let didSelectAll = false;
   if (noSelection) {
     // Select all first, then a single cut — never the line-with-newline cut.
     await vscode.commands.executeCommand('editor.action.selectAll');
@@ -55,6 +62,7 @@ export async function runPipeline(
     await vscode.commands.executeCommand('editor.action.clipboardCutAction');
     await sleep(80);
     cut = await vscode.env.clipboard.readText();
+    didSelectAll = true;
   } else {
     // 3. cut the selection
     await vscode.commands.executeCommand('editor.action.clipboardCutAction');
@@ -68,11 +76,14 @@ export async function runPipeline(
       await vscode.commands.executeCommand('editor.action.clipboardCutAction');
       await sleep(80);
       cut = await vscode.env.clipboard.readText();
+      didSelectAll = true;
     }
   }
 
-  // 5. still nothing -> abort silently
-  if (!cut || cut === snapshot) return;
+  // 5. still nothing -> abort silently. After a select-all cut, only an
+  // empty result means "nothing"; the snapshot comparison must not apply.
+  if (!cut) return;
+  if (!didSelectAll && cut === snapshot) return;
 
   // 6-7. convert. Auto = per-character bidirectional (each char by its own
   // script). Forced = single direction (convert only the opposite script).
