@@ -111,3 +111,23 @@ test('detectDirection: mostly Latin text -> toTarget', () => {
 test('detectDirection: ties go to toTarget', () => {
   assert.equal(detectDirection('', hebrewForTest), 'toTarget');
 });
+
+import { getLayout } from '../src/layouts/index';
+
+test('generated Hebrew layout: tbh rumv kgau, -> אני רוצה לעשות', () => {
+  const he = getLayout('hebrew');
+  assert.ok(he, 'hebrew layout must exist');
+  const map = buildMapping(english, he!, true);
+  assert.equal(convert('tbh rumv kgau,', map), 'אני רוצה לעשות');
+});
+
+test('generated Hebrew layout: ארוק -> true (reverse)', () => {
+  const he = getLayout('hebrew')!;
+  const map = buildMapping(he, english, true);
+  assert.equal(convert('ארוק', map), 'true');
+});
+
+test('generated index exposes ~32 target names', () => {
+  const { TARGET_NAMES } = require('../src/layouts/index');
+  assert.ok(TARGET_NAMES.length >= 30 && TARGET_NAMES.length <= 32);
+});
