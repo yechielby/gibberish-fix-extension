@@ -15,9 +15,42 @@
   "main": "./dist/extension.js",
   "activationEvents": ["onStartupFinished"],
   "contributes": {
-    "commands": [],
-    "keybindings": [],
-    "configuration": { "title": "GibberishFix", "properties": {} }
+    "commands": [
+      { "command": "gibberish-fix.convert", "title": "GibberishFix: Convert (auto)" },
+      { "command": "gibberish-fix.convertToEnglish", "title": "GibberishFix: Convert to English" },
+      { "command": "gibberish-fix.convertToTarget", "title": "GibberishFix: Convert to Target Language" },
+      { "command": "gibberish-fix.showMenu", "title": "GibberishFix: Choose Target Language" }
+    ],
+    "keybindings": [
+      { "command": "gibberish-fix.convert", "key": "alt+shift+l" },
+      { "command": "gibberish-fix.convertToEnglish", "key": "alt+shift+e" },
+      { "command": "gibberish-fix.convertToTarget", "key": "alt+shift+t" }
+    ],
+    "configuration": {
+      "title": "GibberishFix",
+      "properties": {
+        "gibberish-fix.targetLanguage": {
+          "type": "string",
+          "default": "auto",
+          "markdownDescription": "Target language. `auto` = detect from installed OS keyboards. Otherwise a layout name (e.g. `hebrew`, `arabic`, `farsi`)."
+        },
+        "gibberish-fix.switchOSKeyboard": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "After converting, switch the OS keyboard layout to match (Windows only in this version)."
+        },
+        "gibberish-fix.convertDigits": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Convert digits too. Critical for Farsi/Bengali (native digits); a no-op for Hebrew/Arabic."
+        },
+        "gibberish-fix.selectAllIfNoSelection": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "If no text is selected, select all text in the input and convert it."
+        }
+      }
+    }
   },
   "scripts": {
     "gen-layouts": "node scripts/import-layouts.mjs",
