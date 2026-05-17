@@ -4,10 +4,12 @@ import * as path from 'node:path';
 
 /** Maps OS identifiers to our layout names. Extend as needed. */
 const OS_TO_LAYOUT: Record<string, string> = {
-  // Windows KLIDs (lowercased, last 8 hex of InputMethodTip)
-  '0000040d': 'hebrew', '00000409': 'english', '00000401': 'arabic',
-  '00000429': 'farsi', '00000419': 'russian', '00000422': 'ukrainian',
-  '00000423': 'belarusian', '00000408': 'greek', '00000420': 'urdu',
+  // Windows LANGIDs (the part BEFORE the colon in an InputMethodTip,
+  // e.g. "040D:0002040D" -> langid "040d"). Matching the LANGID rather
+  // than the full KLID is robust to keyboard sub-variants.
+  '040d': 'hebrew', '0409': 'english', '0401': 'arabic',
+  '0429': 'farsi', '0419': 'russian', '0422': 'ukrainian',
+  '0423': 'belarusian', '0408': 'greek', '0420': 'urdu',
   // macOS input source IDs
   'com.apple.keylayout.Hebrew': 'hebrew', 'com.apple.keylayout.US': 'english',
   'com.apple.keylayout.Arabic': 'arabic', 'com.apple.keylayout.Persian': 'farsi',
@@ -32,8 +34,11 @@ export async function detectOSLayouts(): Promise<string[]> {
       '(Get-WinUserLanguageList).InputMethodTips -join "`n"',
     ]);
     for (const tip of out.split(/\r?\n/)) {
-      const klid = tip.split(':')[1]?.trim().toLowerCase().slice(-8);
-      if (klid && OS_TO_LAYOUT[klid]) found.add(OS_TO_LAYOUT[klid]);
+      // tip format: "LANGID:KLID" e.g. "040D:0002040D". The LANGID
+      // (before the colon) is the stable language id; the KLID may be
+      // a sub-variant (e.g. 0002040D), so match on LANGID.
+      const langid = tip.split(':')[0]?.trim().toLowerCase();
+      if (langid && OS_TO_LAYOUT[langid]) found.add(OS_TO_LAYOUT[langid]);
     }
   } else if (process.platform === 'darwin') {
     const out = await run('defaults', [
