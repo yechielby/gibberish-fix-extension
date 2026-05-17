@@ -45,3 +45,24 @@ export function convert(text: string, map: Map<string, string>): string {
   }
   return [...text].map((ch) => map.get(ch) ?? ch).join('');
 }
+
+/**
+ * Decide conversion direction by majority vote:
+ * more target-script chars -> convert back to English, else -> to target.
+ */
+export function detectDirection(
+  text: string,
+  target: Layout,
+): 'toEnglish' | 'toTarget' {
+  let tgt = 0;
+  let lat = 0;
+  for (const ch of text) {
+    const cp = ch.codePointAt(0)!;
+    if (target.scriptRange.some((rg) => cp >= rg.from && cp <= rg.to)) {
+      tgt++;
+    } else if ((cp >= 0x41 && cp <= 0x5a) || (cp >= 0x61 && cp <= 0x7a)) {
+      lat++;
+    }
+  }
+  return tgt > lat ? 'toEnglish' : 'toTarget';
+}

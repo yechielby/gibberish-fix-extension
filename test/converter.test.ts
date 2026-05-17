@@ -97,3 +97,17 @@ test('convert: multi-char ligature keys are replaced before single chars', () =>
   // "لا" must become "v", not "h"+"h"
   assert.equal(convert('لا', map), 'v');
 });
+
+import { detectDirection } from '../src/converter';
+
+test('detectDirection: mostly Hebrew text -> toEnglish', () => {
+  assert.equal(detectDirection('שלום עולם', hebrewForTest), 'toEnglish');
+});
+
+test('detectDirection: mostly Latin text -> toTarget', () => {
+  assert.equal(detectDirection('hello world', hebrewForTest), 'toTarget');
+});
+
+test('detectDirection: ties go to toTarget', () => {
+  assert.equal(detectDirection('', hebrewForTest), 'toTarget');
+});
