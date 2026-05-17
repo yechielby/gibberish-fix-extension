@@ -1,0 +1,38 @@
+{
+  "name": "gibberish-fix",
+  "displayName": "GibberishFix",
+  "description": "Fix text typed in the wrong keyboard layout (LangOver-style) in any input, including AI chat panels. Auto-switches the OS keyboard.",
+  "version": "1.0.0",
+  "publisher": "yechielby",
+  "license": "MIT",
+  "engines": { "vscode": "^1.94.0" },
+  "categories": ["Keymaps", "Other"],
+  "keywords": [
+    "gibberish-fix", "gibberishfix", "gibberish", "langover",
+    "keyboard layout", "wrong layout", "hebrew", "arabic",
+    "persian", "rtl", "typing fix"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "commands": [],
+    "keybindings": [],
+    "configuration": { "title": "GibberishFix", "properties": {} }
+  },
+  "scripts": {
+    "gen-layouts": "node scripts/import-layouts.mjs",
+    "build": "node esbuild.mjs --production",
+    "watch": "node esbuild.mjs --watch",
+    "test": "node --import tsx --test test/*.test.ts",
+    "package": "npx @vscode/vsce package",
+    "vscode:prepublish": "npm run build"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.94.0",
+    "@types/node": "^20.0.0",
+    "esbuild": "^0.24.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  },
+  "files": ["dist", "scripts/switch-layout.ps1", "README.md", "CHANGELOG.md", "icon.png"]
+}
