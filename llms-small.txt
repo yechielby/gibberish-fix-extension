@@ -1,6 +1,6 @@
 # GibberishFix
 
-> Standalone VS Code extension that fixes text typed in the wrong keyboard layout (LangOver-style) in any input — including AI-chat webviews (Claude Code, Copilot, Cursor, Antigravity, Gemini), the editor, and the terminal. One keystroke converts the text and (Windows) switches the OS keyboard to match.
+> Standalone VS Code extension that fixes text typed in the wrong keyboard layout in any input — including AI-chat webviews (Claude Code, Copilot, Cursor, Antigravity, Gemini), the editor, and the terminal. One keystroke converts the text and (Windows) switches the OS keyboard to match.
 
 Mechanism: a clipboard-relay pipeline (the only thing that penetrates
 extension webviews) — cut → detect direction (majority script vote) → remap

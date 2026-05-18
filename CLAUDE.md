@@ -3,7 +3,7 @@
 ## Project Overview
 
 Standalone VS Code extension that fixes text typed in the wrong keyboard
-layout (LangOver-style) in **any** input — the editor, search boxes, the
+layout in **any** input — the editor, search boxes, the
 terminal, and AI-chat webviews (Claude Code, Copilot, Cursor AI, Antigravity,
 Gemini). One keystroke converts the selected (or whole-input) text and, on
 Windows, switches the OS keyboard layout to match so the user's flow is never

@@ -1,6 +1,6 @@
 # GibberishFix
 
-Fix text typed in the wrong keyboard layout — LangOver-style — in **any**
+Fix text typed in the wrong keyboard layout in **any**
 VS Code input, including AI chat panels (Claude Code, Copilot, Cursor AI,
 Antigravity, Gemini), the editor, search boxes, and the terminal. One
 keystroke converts the text **and** switches your OS keyboard to match
@@ -46,7 +46,7 @@ by Francisco Hodge, and are licensed under the MIT License.
 
 ## עברית
 
-תיקון טקסט שהוקלד ב-keyboard layout שגוי, בסגנון LangOver, **בכל** שדה
+תיקון טקסט שהוקלד ב-keyboard layout שגוי, **בכל** שדה
 קלט ב-VS Code כולל צ'אטים של AI. לחיצה אחת ממירה את הטקסט **וגם** מחליפה
 את שפת המקלדת של מערכת ההפעלה (Windows) - בלי לקטוע את חוט המחשבה.
 

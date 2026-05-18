@@ -1,6 +1,6 @@
 # GibberishFix
 
-> A standalone VS Code extension that fixes text typed in the wrong keyboard layout (LangOver-style) in any input — including AI-chat webviews (Claude Code, Copilot, Cursor AI, Antigravity, Gemini), the editor, search boxes, and the terminal. One keystroke converts the text and, on Windows, switches the OS keyboard layout to match so the user's train of thought is never interrupted.
+> A standalone VS Code extension that fixes text typed in the wrong keyboard layout in any input — including AI-chat webviews (Claude Code, Copilot, Cursor AI, Antigravity, Gemini), the editor, search boxes, and the terminal. One keystroke converts the text and, on Windows, switches the OS keyboard layout to match so the user's train of thought is never interrupted.
 
 GibberishFix works via a clipboard-relay pipeline — the only mechanism that
 penetrates extension webviews: cut the selection (or whole input) → convert →
@@ -14,7 +14,7 @@ simple-keyboard-layouts and committed (zero runtime dependencies).
 Key facts:
 - Default keybindings: `Alt+Shift+L` (auto = per-character bidirectional, mixed text fixed both ways), `Alt+Shift+E` (all to English), `Alt+Shift+T` (all to target); all rebindable.
 - Settings: `gibberish-fix.targetLanguage` (default `auto`, OS-detected), `switchOSKeyboard` (default true, Windows), `convertDigits` (default true), `selectAllIfNoSelection` (default true).
-- Languages: 32 non-Latin scripts (Hebrew, Arabic, Farsi, Russian, Greek, Bengali, Japanese, Korean, and more); Latin layouts intentionally excluded (low LangOver value).
+- Languages: 32 non-Latin scripts (Hebrew, Arabic, Farsi, Russian, Greek, Bengali, Japanese, Korean, and more); Latin layouts intentionally excluded (low practical value for layout-mixup fixes).
 - Verified anchors: `tbh rumv kgau,` → `אני רוצה לעשות`; `ארוק` → `true`; mixed `vna,bv mrhl kvhu, auuv  ארוק` → `המשתנה צריך להיות שווה  true`.
 
 ## Source

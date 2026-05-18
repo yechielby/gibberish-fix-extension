@@ -1,14 +1,14 @@
 {
   "name": "gibberish-fix",
   "displayName": "GibberishFix",
-  "description": "Fix text typed in the wrong keyboard layout (LangOver-style) in any input, including AI chat panels. Auto-switches the OS keyboard.",
+  "description": "Fix text typed in the wrong keyboard layout in any input, including AI chat panels. Auto-switches the OS keyboard.",
   "version": "1.0.0",
   "publisher": "yechielby",
   "license": "MIT",
   "engines": { "vscode": "^1.94.0" },
   "categories": ["Keymaps", "Other"],
   "keywords": [
-    "gibberish-fix", "gibberishfix", "gibberish", "langover",
+    "gibberish-fix", "gibberishfix", "gibberish",
     "keyboard layout", "wrong layout", "hebrew", "arabic",
     "persian", "rtl", "typing fix"
   ],
