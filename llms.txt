@@ -3,24 +3,25 @@
 > A standalone VS Code extension that fixes text typed in the wrong keyboard layout (LangOver-style) in any input — including AI-chat webviews (Claude Code, Copilot, Cursor AI, Antigravity, Gemini), the editor, search boxes, and the terminal. One keystroke converts the text and, on Windows, switches the OS keyboard layout to match so the user's train of thought is never interrupted.
 
 GibberishFix works via a clipboard-relay pipeline — the only mechanism that
-penetrates extension webviews: cut the selection (or whole input) → detect
-conversion direction by majority script vote → remap characters position-by-
-position between keyboard layouts → paste → switch the OS keyboard. The
+penetrates extension webviews: cut the selection (or whole input) → convert →
+paste → switch the OS keyboard. The auto command converts every character by
+its own script (bidirectional, mixed text fixed both ways at once); the
+forced commands remap only the opposite script (single direction). The
 conversion core is pure and unit-tested; all VS Code/OS side effects are
 isolated. ~32 non-Latin keyboard layouts are auto-generated at build time from
 simple-keyboard-layouts and committed (zero runtime dependencies).
 
 Key facts:
-- Default keybindings: `Alt+Shift+L` (auto), `Alt+Shift+E` (to English), `Alt+Shift+T` (to target); all rebindable.
+- Default keybindings: `Alt+Shift+L` (auto = per-character bidirectional, mixed text fixed both ways), `Alt+Shift+E` (all to English), `Alt+Shift+T` (all to target); all rebindable.
 - Settings: `gibberish-fix.targetLanguage` (default `auto`, OS-detected), `switchOSKeyboard` (default true, Windows), `convertDigits` (default true), `selectAllIfNoSelection` (default true).
 - Languages: 32 non-Latin scripts (Hebrew, Arabic, Farsi, Russian, Greek, Bengali, Japanese, Korean, and more); Latin layouts intentionally excluded (low LangOver value).
-- Verified anchors: `tbh rumv kgau,` → `אני רוצה לעשות`; `ארוק` → `true`.
+- Verified anchors: `tbh rumv kgau,` → `אני רוצה לעשות`; `ארוק` → `true`; mixed `vna,bv mrhl kvhu, auuv  ארוק` → `המשתנה צריך להיות שווה  true`.
 
 ## Source
 
 - [src/extension.ts](src/extension.ts): Composition root — activation, command registration, target resolution (auto / single-detected / 2+-with-learning).
-- [src/pipeline.ts](src/pipeline.ts): 11-step pipeline — snapshot clipboard → cut → select-all fallback → detect direction → convert → paste → switch OS keyboard → learn preferred target.
-- [src/converter.ts](src/converter.ts): Pure logic — `splitRow` (bare `split(' ')`, no trim), `isSpecial`, `buildMapping` (position-by-position, graceful degradation), `convert` (ligature-aware), `detectDirection` (majority vote).
+- [src/pipeline.ts](src/pipeline.ts): Pipeline — snapshot clipboard → empty-selection detection (select-all in editors, clipboard-diff heuristic in webviews) → cut → convert (auto = bidirectional, forced = single direction) → paste → switch OS keyboard → learn preferred target.
+- [src/converter.ts](src/converter.ts): Pure logic — `splitRow` (bare `split(' ')`, no trim), `isSpecial`, `buildMapping` (position-by-position, graceful degradation), `buildBidiMapping` (per-character-by-script, auto mode), `convert` (ligature-aware), `detectDirection` (majority vote, used only to pick the post-convert OS keyboard).
 - [src/osLayout.ts](src/osLayout.ts): Silent OS keyboard-language detection (Windows LANGID / macOS / Linux) + Windows keyboard switch.
 - [src/settings.ts](src/settings.ts): Workspace config + globalState preferred-target learning.
 - [src/statusBar.ts](src/statusBar.ts): Status bar item → target-language QuickPick.
@@ -29,7 +30,7 @@ Key facts:
 - [src/layouts/index.ts](src/layouts/index.ts): Generated registry — `LAYOUTS`, `getLayout`, `TARGET_NAMES`.
 - [scripts/import-layouts.mjs](scripts/import-layouts.mjs): Build-time generator for the ~32 layouts.
 - [scripts/switch-layout.ps1](scripts/switch-layout.ps1): Windows P/Invoke keyboard switch (bundled in VSIX).
-- [test/converter.test.ts](test/converter.test.ts): 20 unit + integration tests (Node test runner via tsx).
+- [test/converter.test.ts](test/converter.test.ts): 24 unit + integration tests (Node test runner via tsx).
 
 ## Documentation
 

@@ -2,7 +2,7 @@
   "name": "gibberish-fix",
   "displayName": "GibberishFix",
   "description": "Fix text typed in the wrong keyboard layout (LangOver-style) in any input, including AI chat panels. Auto-switches the OS keyboard.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "yechielby",
   "license": "MIT",
   "engines": { "vscode": "^1.94.0" },
@@ -17,9 +17,9 @@
   "activationEvents": ["onStartupFinished"],
   "contributes": {
     "commands": [
-      { "command": "gibberish-fix.convert", "title": "GibberishFix: Convert (auto)" },
-      { "command": "gibberish-fix.convertToEnglish", "title": "GibberishFix: Convert to English" },
-      { "command": "gibberish-fix.convertToTarget", "title": "GibberishFix: Convert to Target Language" },
+      { "command": "gibberish-fix.convert", "title": "GibberishFix: Convert (auto / mixed — each char by its own script)" },
+      { "command": "gibberish-fix.convertToEnglish", "title": "GibberishFix: Convert all to English" },
+      { "command": "gibberish-fix.convertToTarget", "title": "GibberishFix: Convert all to Target Language" },
       { "command": "gibberish-fix.showMenu", "title": "GibberishFix: Choose Target Language" }
     ],
     "keybindings": [
