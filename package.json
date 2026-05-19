@@ -17,8 +17,14 @@
   "categories": ["Keymaps", "Other"],
   "keywords": [
     "gibberish-fix", "gibberishfix", "gibberish",
-    "keyboard layout", "wrong layout", "hebrew", "arabic",
-    "persian", "rtl", "typing fix"
+    "keyboard layout", "wrong keyboard layout", "wrong layout",
+    "keyboard layout converter", "layout converter", "layout switcher",
+    "keymap", "text converter", "transliteration",
+    "typing fix", "typo fix", "punto switcher",
+    "hebrew", "arabic", "persian", "farsi",
+    "russian", "cyrillic", "ukrainian", "greek",
+    "bengali", "hindi", "thai", "multilingual",
+    "vscode", "ai chat", "keyboard fix"
   ],
   "main": "./dist/extension.js",
   "icon": "icon.png",
