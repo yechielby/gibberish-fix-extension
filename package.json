@@ -5,6 +5,14 @@
   "version": "1.0.0",
   "publisher": "yechielby",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yechielby/gibberish-fix-extension.git"
+  },
+  "homepage": "https://github.com/yechielby/gibberish-fix-extension#readme",
+  "bugs": {
+    "url": "https://github.com/yechielby/gibberish-fix-extension/issues"
+  },
   "engines": { "vscode": "^1.94.0" },
   "categories": ["Keymaps", "Other"],
   "keywords": [

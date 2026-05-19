@@ -3,4 +3,5 @@ dist/
 *.vsix
 .tmp-layouts/
 .claude/
+scripts/
 docs/
