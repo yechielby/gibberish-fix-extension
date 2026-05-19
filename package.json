@@ -2,7 +2,7 @@
   "name": "gibberish-fix",
   "displayName": "GibberishFix",
   "description": "Fix text typed in the wrong keyboard layout in any input, including AI chat panels. Auto-switches the OS keyboard.",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "publisher": "yechielby",
   "license": "MIT",
   "repository": {
