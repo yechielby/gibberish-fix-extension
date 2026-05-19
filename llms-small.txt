@@ -15,7 +15,7 @@ force direction; no selection converts the whole input. Settings:
 `אני רוצה לעשות`; `ארוק` → `true`.
 
 Layout data sourced from simple-keyboard-layouts (Francisco Hodge, MIT).
-Publisher `yechielby`. Windows-only OS keyboard switch in v1.0.
+Publisher `yechielby`. Windows-only OS keyboard switch in v0.1.0.
 
 ## Key files
 

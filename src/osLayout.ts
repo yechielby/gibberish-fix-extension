@@ -60,7 +60,7 @@ export async function detectOSLayouts(): Promise<string[]> {
   return [...found];
 }
 
-/** Switch the OS keyboard (Windows only in V1.0). Fails silently. */
+/** Switch the OS keyboard (Windows only in V0.1.0). Fails silently. */
 export async function switchOSKeyboard(
   context: vscode.ExtensionContext,
   klidWindows: string,

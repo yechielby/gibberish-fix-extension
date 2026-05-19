@@ -44,4 +44,4 @@ Key facts:
 
 - [LICENSE](LICENSE): MIT (extension) + bundled simple-keyboard-layouts MIT notice (Francisco Hodge).
 - Build-time layout generation: `npm run gen-layouts` regenerates `src/layouts/*`; output is committed so there is no runtime dependency on the upstream repo.
-- Marketplace publisher: `yechielby`. Windows-only OS keyboard switch in v1.0; macOS/Linux planned for v1.1.
+- Marketplace publisher: `yechielby`. Windows-only OS keyboard switch in v0.1.0; macOS/Linux planned for a later release.
