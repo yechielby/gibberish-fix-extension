@@ -84,7 +84,8 @@ which OS keyboard to switch to after a mixed conversion.
   and mixed `vna,bv mrhl kvhu, auuv  ארוק` → `המשתנה צריך להיות שווה  true`)
   are protected by integration tests against the generated Hebrew layout — if
   they fail, debug the generator, never the test or generated files.
-- Windows-only OS keyboard switch in v1.0 (macOS/Linux planned for v1.1).
+- Windows-only OS keyboard switch in v0.1.0 (macOS/Linux planned for a
+  later release).
 - Digits convert by default (critical for Farsi/Bengali native digits).
 
 ## Publishing
