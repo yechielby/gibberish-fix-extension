@@ -11,7 +11,7 @@
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/yechielby.gibberish-fix?label=VS%20Code%20Marketplace&logo=visualstudiocode&color=107c10)](https://marketplace.visualstudio.com/items?itemName=yechielby.gibberish-fix)
 
 
-**🇬🇧 [English](#english)  ·  🇮🇱 [עברית](#hebrew)**
+**🇬🇧 [English](#english)  ·  🇮🇱 [עברית](https://github.com/yechielby/gibberish-fix-extension#hebrew)**
 
 </div>
 
@@ -161,7 +161,7 @@ under the [MIT License](LICENSE).
 
 ---
 
-<div dir="rtl" align="right">
+<div dir="rtl">
 <a id="hebrew"></a>
 
 ## עברית
