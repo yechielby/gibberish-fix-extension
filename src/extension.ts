@@ -22,10 +22,22 @@ function resolveTarget(context: vscode.ExtensionContext): Layout | undefined {
 }
 
 async function showMenu(context: vscode.ExtensionContext): Promise<void> {
-  const items = TARGET_NAMES.map((n) => ({
-    label: LAYOUTS[n].displayName,
-    description: n,
-  }));
+  // Languages installed as OS keyboards get a ✓ and sort first: those also
+  // get the automatic OS keyboard switch. The rest still convert text fine
+  // (the OS switch is just skipped), so they are shown — never hidden.
+  const installed = new Set(await detectOSLayouts());
+  const items = [...TARGET_NAMES]
+    .sort((a, b) => Number(installed.has(b)) - Number(installed.has(a)))
+    .map((n) => ({
+      // description stays exactly `n` — it is the layout key used downstream.
+      label: installed.has(n)
+        ? `$(check) ${LAYOUTS[n].displayName}`
+        : LAYOUTS[n].displayName,
+      description: n,
+      detail: installed.has(n)
+        ? 'Installed on this PC — keyboard will switch automatically'
+        : undefined,
+    }));
   const pick = await vscode.window.showQuickPick(items, {
     placeHolder: 'Choose GibberishFix target language',
   });
