@@ -34,7 +34,8 @@
       { "command": "gibberish-fix.convert", "title": "GibberishFix: Convert (auto / mixed — each char by its own script)" },
       { "command": "gibberish-fix.convertToEnglish", "title": "GibberishFix: Convert all to English" },
       { "command": "gibberish-fix.convertToTarget", "title": "GibberishFix: Convert all to Target Language" },
-      { "command": "gibberish-fix.showMenu", "title": "GibberishFix: Choose Target Language" }
+      { "command": "gibberish-fix.showMenu", "title": "GibberishFix: Choose Target Language" },
+      { "command": "gibberish-fix.openKeybindingsSettings", "title": "GibberishFix: Open Keybindings Settings" }
     ],
     "keybindings": [
       { "command": "gibberish-fix.convert", "key": "alt+shift+l" },

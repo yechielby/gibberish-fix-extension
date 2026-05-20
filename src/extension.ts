@@ -26,7 +26,7 @@ async function showMenu(context: vscode.ExtensionContext): Promise<void> {
   // get the automatic OS keyboard switch. The rest still convert text fine
   // (the OS switch is just skipped), so they are shown — never hidden.
   const installed = new Set(await detectOSLayouts());
-  const items = [...TARGET_NAMES]
+  const langItems: vscode.QuickPickItem[] = [...TARGET_NAMES]
     .sort((a, b) => Number(installed.has(b)) - Number(installed.has(a)))
     .map((n) => ({
       // description stays exactly `n` — it is the layout key used downstream.
@@ -38,16 +38,32 @@ async function showMenu(context: vscode.ExtensionContext): Promise<void> {
         ? 'Installed on this PC — keyboard will switch automatically'
         : undefined,
     }));
+  // Identified by reference equality after the pick — no description field so
+  // it doesn't clash with layout keys in the QuickPick UI.
+  const shortcutsItem: vscode.QuickPickItem = {
+    label: '$(gear) Customize keyboard shortcuts…',
+    detail: 'Open VS Code Keyboard Shortcuts filtered to GibberishFix',
+  };
+  const items: vscode.QuickPickItem[] = [
+    ...langItems,
+    { label: '', kind: vscode.QuickPickItemKind.Separator },
+    shortcutsItem,
+  ];
   const pick = await vscode.window.showQuickPick(items, {
     placeHolder: 'Choose GibberishFix target language',
   });
-  if (pick) {
-    await setPreferredTarget(context.globalState, pick.description);
-    await vscode.workspace
-      .getConfiguration('gibberish-fix')
-      .update('targetLanguage', pick.description, true);
-    updateStatusBar(LAYOUTS[pick.description].displayName);
+  if (!pick) return;
+  if (pick === shortcutsItem) {
+    await vscode.commands.executeCommand('gibberish-fix.openKeybindingsSettings');
+    return;
   }
+  const layoutKey = pick.description;
+  if (!layoutKey) return;
+  await setPreferredTarget(context.globalState, layoutKey);
+  await vscode.workspace
+    .getConfiguration('gibberish-fix')
+    .update('targetLanguage', layoutKey, true);
+  updateStatusBar(LAYOUTS[layoutKey].displayName);
 }
 
 export async function activate(
@@ -69,6 +85,12 @@ export async function activate(
     register('gibberish-fix.convertToTarget', 'toTarget'),
     vscode.commands.registerCommand('gibberish-fix.showMenu', () =>
       showMenu(context),
+    ),
+    vscode.commands.registerCommand('gibberish-fix.openKeybindingsSettings', () =>
+      vscode.commands.executeCommand(
+        'workbench.action.openGlobalKeybindings',
+        'GibberishFix',
+      ),
     ),
   );
 

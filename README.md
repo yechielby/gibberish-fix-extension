@@ -8,8 +8,10 @@
 ![Platform](https://img.shields.io/badge/works%20in-any%20VS%20Code--based%20IDE-007ACC)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Open VSX](https://img.shields.io/open-vsx/v/yechielby/gibberish-fix?label=Open%20VSX&color=c160ef)](https://open-vsx.org/extension/yechielby/gibberish-fix)
-[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/yechielby.gibberish-fix?label=VS%20Code%20Marketplace&logo=visualstudiocode&color=107c10)](https://marketplace.visualstudio.com/items?itemName=yechielby.gibberish-fix)
 
+<img src="icon.png" alt="Gibberish Fix Logo">
+
+<kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd>
 
 **🇬🇧 [English](#english)  ·  🇮🇱 [עברית](https://github.com/yechielby/gibberish-fix-extension#hebrew)**
 
@@ -29,7 +31,7 @@ get gibberish: `tbh rumv kgau,` instead of `אני רוצה לעשות`, `ghbdtn
 instead of `привет`, `dkssud` instead of `안녕`. Every language has a name
 for this mess, and every developer loses their train of thought retyping it.
 
-**GibberishFix** fixes it with one keystroke — and on Windows it also
+**GibberishFix** fixes it with one keystroke ( <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd>) — and on Windows it also
 switches your OS keyboard to match, so you just keep typing.
 
 ### 🖥️ Where it works
@@ -63,8 +65,12 @@ and press one of:
 
 **Rule of thumb:** use `Alt+Shift+L` when you typed without looking and the
 mess could go either way; use the forced commands when you want the whole
-input collapsed into one script. Rebind any shortcut via
-**VS Code → Keyboard Shortcuts → search "GibberishFix"**.
+input collapsed into one script. 
+
+>To rebind a shortcut, click the **⌨️**
+indicator in the status bar and pick **⚙️ Customize keyboard shortcuts…**
+at the bottom of the menu.
+
 
 ### 🎯 Choosing the target language
 
@@ -206,9 +212,8 @@ GibberishFix עובד **בכל עורך מבוסס VS Code** — גם ב‑VS Co
 **כלל אצבע:** להשתמש ב‑`Alt+Shift+L` כשהקלדת בלי להסתכל והבלגן יכול להיות
 בשני הכיוונים; להשתמש בפקודות הכפויות כשרוצים לרכז את כל הקלט לסקריפט אחד.
 
-ניתן לשנות כל קיצור דרך הגדרת מקשי הקיצור של VS Code: פותחים את
-**Keyboard Shortcuts** (קיצור: `Ctrl+K Ctrl+S`), מחפשים "GibberishFix"
-ומשנים את הקיצור הרצוי.
+>כדי לשנות קיצור, ללחוץ על אינדיקטור ה‑**⌨️** שבשורת הסטטוס ולבחור
+**⚙️ Customize keyboard shortcuts…** בתחתית התפריט.
 
 ### בחירת שפת היעד
 
