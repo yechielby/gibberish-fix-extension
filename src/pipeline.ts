@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import { getLayout } from './layouts/index';
 import {
   buildMapping,
-  buildBidiMapping,
   convert,
+  convertBidi,
   detectDirection,
 } from './converter';
 import { getSettings, setPreferredTarget } from './settings';
@@ -90,11 +90,11 @@ export async function runPipeline(
   let converted: string;
   let dir: 'toEnglish' | 'toTarget';
   if (forced === 'auto') {
-    const map = buildBidiMapping(english, target, settings.convertDigits);
-    converted = convert(cut, map);
-    // The mix has no single direction; use the majority only to decide
-    // which OS keyboard to switch to afterwards.
+    // The mix has no single direction; use the majority both as the OS-
+    // keyboard target (step 10) and as the fallback for shared ASCII
+    // characters with no unambiguous neighbour in either direction.
     dir = detectDirection(cut, target);
+    converted = convertBidi(cut, english, target, settings.convertDigits, dir);
   } else {
     dir = forced;
     const [from, to] =

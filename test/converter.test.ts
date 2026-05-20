@@ -160,3 +160,84 @@ test('generated index exposes ~32 target names', () => {
   const { TARGET_NAMES } = require('../src/layouts/index');
   assert.ok(TARGET_NAMES.length >= 30 && TARGET_NAMES.length <= 32);
 });
+
+import { convertBidi } from '../src/converter';
+
+// Anchor test for the user-reported bug: shared ASCII slots (`.` `,` `/` `'`)
+// must be resolved by neighbouring-letter context, not statically mapped
+// English -> target. Reported by Yitzhak Binyamin (LinkedIn, 2026-05).
+test('convertBidi: anchor — `.. יקרק ן,צ פוא ש בםצצקמא` -> `// here i\'m put a comment`', () => {
+  const he = getLayout('hebrew')!;
+  assert.equal(
+    convertBidi('.. יקרק ן,צ פוא ש בםצצקמא', english, he, true),
+    "// here i'm put a comment",
+  );
+});
+
+test('convertBidi: shared `.` after Hebrew word resolves to `/` (he->en)', () => {
+  const he = getLayout('hebrew')!;
+  // `ארוק.` — Hebrew gibberish then a `.`; backward context = ק (Hebrew),
+  // so `.` belongs to the Hebrew side and maps to `/`.
+  assert.equal(convertBidi('ארוק.', english, he, true), 'true/');
+});
+
+test('convertBidi: shared `.` after Latin word resolves to `ץ` (en->he)', () => {
+  const he = getLayout('hebrew')!;
+  // `true.` — Latin then `.`; backward context = e (Latin), so `.` belongs
+  // to the English side and maps to `ץ` (Hebrew layout `.` position).
+  assert.equal(convertBidi('true.', english, he, true), 'ארוקץ');
+});
+
+test('convertBidi: shared char at start resolves via forward lookup', () => {
+  const he = getLayout('hebrew')!;
+  // `.ארוק` — `.` has nothing backward, forward = Hebrew, so `.` -> `/`.
+  assert.equal(convertBidi('.ארוק', english, he, true), '/true');
+});
+
+test('convertBidi: all-shared input falls back to provided direction', () => {
+  const he = getLayout('hebrew')!;
+  // No unambiguous letters anywhere; fallback wins. Default (toTarget)
+  // preserves prior behaviour of buildBidiMapping for isolated punctuation.
+  assert.equal(convertBidi('..', english, he, true), 'ץץ');
+  assert.equal(convertBidi('..', english, he, true, 'toEnglish'), '//');
+});
+
+test('convertBidi: pure Latin gibberish still converts to target', () => {
+  const he = getLayout('hebrew')!;
+  assert.equal(
+    convertBidi('tbh rumv kgau,', english, he, true),
+    'אני רוצה לעשות',
+  );
+});
+
+test('convertBidi: pure Hebrew gibberish still converts to English', () => {
+  const he = getLayout('hebrew')!;
+  assert.equal(convertBidi('ארוק', english, he, true), 'true');
+});
+
+test('convertBidi: mixed gibberish preserves per-script direction', () => {
+  const he = getLayout('hebrew')!;
+  // Same anchor as buildBidiMapping mixed test, but routed through convertBidi.
+  assert.equal(
+    convertBidi('vna,bv mrhl kvhu, auuv  ארוק', english, he, true),
+    'המשתנה צריך להיות שווה  true',
+  );
+});
+
+// Sanity: prove that *real* Hebrew-keyboard typing of code-y strings like
+// "here.now" and "'here'" round-trips back through convertBidi. On a real
+// Hebrew layout, `.` is reached by the `/` physical key, `'` by the `w` key,
+// and the literal `.` / `'` characters are produced by *different* keys —
+// so the gibberish produced by real typing of `here.now` is `יקרקץמם'`, not
+// `יקרק.מםו`. These tests guard against ever "fixing" that round-trip.
+test('convertBidi: real Hebrew typing of `here.now` round-trips', () => {
+  const he = getLayout('hebrew')!;
+  // `here.now` keys on Hebrew layout produce: י ק ר ק ץ מ ם '
+  assert.equal(convertBidi("יקרקץמם'", english, he, true), 'here.now');
+});
+
+test("convertBidi: real Hebrew typing of `'here'` round-trips", () => {
+  const he = getLayout('hebrew')!;
+  // `'here'` keys on Hebrew layout produce: , י ק ר ק ,
+  assert.equal(convertBidi(',יקרק,', english, he, true), "'here'");
+});
